@@ -1,0 +1,80 @@
+     1                                            global  _start
+     2                                  
+     3                                  
+     4                                            section .data
+     5 00000000 0C00000000000000        x:        dq      12
+     6 00000008 0D00000000000000        y:        dq      13
+     7                                  
+     8                                            section .text
+     9                                  _start:
+    10                                            ; swap
+    11                                            ; lea rax, x
+    12                                            ; push rax
+    13                                            ; lea rax, y
+    14                                            ; push rax
+    15 00000000 68[00000000]                      push    x
+    16 00000005 68[08000000]                      push    y
+    17                                  
+    18 0000000A E819000000                        call    swap
+    19                                            
+    20 0000000F 4883C410                          add     rsp, 16
+    21                                  
+    22 00000013 6A05                              push    5
+    23                                  
+    24 00000015 E830000000                        call    factorial
+    25                                  
+    26 0000001A 4883C408                          add     rsp, 8
+    27                                  
+    28                                            ; sys_exit
+    29 0000001E B83C000000                        mov     rax, 60
+    30 00000023 4889C7                            mov     rdi, rax
+    31 00000026 0F05                              syscall
+    32                                  swap:
+    33                                            ; setup
+    34 00000028 55                                push    rbp
+    35 00000029 4889E5                            mov     rbp, rsp
+    36                                            ; rax assumed to be modified by procs in 32-bit
+    37                                            ; so not needed in 32-bit
+    38 0000002C 50                                push    rax
+    39 0000002D 53                                push    rbx
+    40 0000002E 51                                push    rcx
+    41 0000002F 52                                push    rdx
+    42                                  
+    43 00000030 488B4510                          mov     rax, [rbp + 16]
+    44 00000034 488B5D18                          mov     rbx, [rbp + 24]
+    45 00000038 488B08                            mov     rcx, [rax]
+    46 0000003B 488B13                            mov     rdx, [rbx]
+    47 0000003E 488910                            mov     [rax], rdx
+    48 00000041 48890B                            mov     [rbx], rcx
+    49                                  
+    50                                            ; cleanup
+    51 00000044 5A                                pop     rdx
+    52 00000045 59                                pop     rcx
+    53 00000046 5B                                pop     rbx
+    54 00000047 58                                pop     rax
+    55 00000048 5D                                pop     rbp
+    56 00000049 C3                                ret
+    57                                  factorial: 
+    58                                            ; setup
+    59 0000004A 55                                push    rbp
+    60 0000004B 4889E5                            mov     rbp, rsp
+    61 0000004E 51                                push    rcx
+    62                                  
+    63 0000004F 488B4D10                          mov     rcx, [rbp + 16]
+    64                                  
+    65                                  
+    66 00000053 4883F901                          cmp     rcx, 1
+    67 00000057 7F07                              jg      l1
+    68 00000059 B801000000                        mov     rax, 1
+    69 0000005E EB0F                              jmp     lend
+    70                                  l1:       
+    71 00000060 48FFC9                            dec     rcx
+    72 00000063 51                                push    rcx
+    73 00000064 E8E1FFFFFF                        call    factorial
+    74 00000069 48FFC1                            inc     rcx
+    75 0000006C 48F7E1                            mul     rcx
+    76                                  lend:
+    77                                            ; cleanup
+    78 0000006F 59                                pop     rcx
+    79 00000070 5D                                pop     rbp
+    80 00000071 C3                                ret

@@ -1,0 +1,67 @@
+     1                                      [bits 32]
+     2                                      global  _start
+     3                                  
+     4                                      section .text
+     5                                  _start:
+     6                                      ; r
+     7 00000000 6A02                        push  2
+     8                                      ; n
+     9 00000002 6A06                        push  6
+    10                                      ; calculate sum
+    11 00000004 E80C000000                  call  _MyPerm
+    12                                      ; cleanup stack, mov result to edx
+    13 00000009 83C408                      add   esp, 8
+    14                                  
+    15                                      ; sys_exit, returning sum
+    16 0000000C 89C3                        mov   ebx, eax
+    17 0000000E B801000000                  mov   eax, 1
+    18 00000013 CD80                        int   80h
+    19                                  
+    20                                  ; calculate n!/(n-r)!
+    21                                  _MyPerm:
+    22                                      ; setup
+    23 00000015 55                          push  ebp
+    24 00000016 89E5                        mov   ebp, esp
+    25 00000018 53                          push  ebx
+    26 00000019 51                          push  ecx
+    27 0000001A 57                          push  edi
+    28                                  
+    29                                  numerator:
+    30 0000001B B801000000                  mov   eax, 1           ; initialize eax to 1
+    31 00000020 8B4D08                      mov   ecx, [ebp + 8]   ; move n to ecx
+    32                                  
+    33 00000023 8D3D[2B000000]              lea   edi, denominator ; load address to return to after factorial into edi
+    34 00000029 EB1A                        jmp   factorial        ; calculate numerator
+    35                                  
+    36                                  denominator:
+    37 0000002B 89C3                        mov   ebx, eax        ; move numerator to ebx for now
+    38 0000002D B801000000                  mov   eax, 1          ; initialize eax to 1
+    39 00000032 8B4D08                      mov   ecx, [ebp + 8]  ; mov n to ecx again
+    40 00000035 2B4D0C                      sub   ecx, [ebp + 12] ; subtract r from n
+    41                                  
+    42 00000038 8D3D[40000000]              lea   edi, fraction   ; load address to return to after factorial into edi
+    43 0000003E EB05                        jmp   factorial       ; calculate denominator
+    44                                  
+    45                                  fraction:
+    46                                      ; calculate fraction
+    47 00000040 93                          xchg  eax, ebx
+    48 00000041 F7F3                        div   ebx
+    49 00000043 EB09                        jmp   end
+    50                                  
+    51                                  factorial:
+    52 00000045 F7E1                        mul   ecx
+    53 00000047 49                          dec   ecx
+    54                                      ; loop until ecx is zero
+    55 00000048 E302                        jecxz factorial_end
+    56 0000004A EBF9                        jmp   factorial
+    57                                  
+    58                                  factorial_end:
+    59 0000004C FFE7                        jmp   edi ; jump to address in edi
+    60                                  
+    61                                  end:
+    62                                      ; cleanup
+    63 0000004E 5F                          pop   edi
+    64 0000004F 59                          pop   ecx
+    65 00000050 5B                          pop   ebx
+    66 00000051 5D                          pop   ebp
+    67 00000052 C3                          ret
