@@ -1,0 +1,4 @@
+  Out of all the algorithms, bubble sort was the on average 4 times slower than the other two algorithms.
+Case one and two were roughly the same for bubble sort, case three was the fastest, with case two in the 
+middle. Selection sorts performance was almost identical for all cases. Insertion sorts performance
+in case 1 was roughly 25% slower than the other cases, which were pretty much the same.

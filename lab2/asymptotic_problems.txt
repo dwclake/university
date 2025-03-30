@@ -1,0 +1,17 @@
+1) f(n) = 5n^3 + 10n^2 + 600
+    Big O:
+        0 <= f(n) <= 6n^3
+        Big O = n^3, because f(n) is always less than or equal to 6n^3
+
+    Big Omega:
+        0 <= 4n^3 <= f(n)
+        Big Omega = n^3, because f(n) is always greater than or equal to 4n^3
+
+
+2) f(n) = 20n^2 + 10n + n^3
+    Big O: 
+        0 <= f(n) <= 2n^3
+        Big O = n^3, because f(n) is always less than or equal to 2n^3
+    Big Omega:
+        0 <= 0n^3 <= f(n)
+        Big Omega = n^3, because f(n) is always greater than or equal to 0n^3

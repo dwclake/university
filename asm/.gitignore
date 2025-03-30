@@ -1,7 +1,0 @@
-*
-!/**/
-!*.asm
-!*.sh
-!*.lst
-!.gitignore
-!Makefile
