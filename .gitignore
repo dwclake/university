@@ -1,0 +1,12 @@
+/cmake-build-debug/
+/.idea/
+/.DS_Store
+/*/.DS_Store
+/*/*/.DS_Store
+/*.exe
+/*/*.exe
+/*/*/*.exe
+/build/
+.cache/clangd/index/lab_8.cpp.8020BD9151D82A11.idx
+.cache/clangd/index/march15.cpp.FCF072016742168B.idx
+.cache/clangd/index
